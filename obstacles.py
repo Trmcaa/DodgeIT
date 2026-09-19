@@ -4,16 +4,36 @@ import settings
 
 class Obstacle():
     def __init__(self):
-        width = randint(settings.OBS_W_MIN, settings.OBS_W_MAX)
-        height = randint(settings.OBS_H_MIN, settings.OBS_H_MAX)
-        x = randint(0, settings.WIDTH - width)
-        y = -height
-        self.rect = pg.Rect(x, y, width, height)
-        self.speed = randint(settings.OBS_SPEED_MIN, settings.OBS_SPEED_MAX)
-        self.color = "blue"
+        base_frames = [pg.image.load(path).convert_alpha() for path in settings.METEOR_FRAMES]
+        scale = randint(
+            int(settings.METEOR_SCALE_MIN * 100),
+            int(settings.METEOR_SCALE_MAX * 100),
+        ) / 100
+        meteor_size = (
+            round(settings.METEOR_WIDTH * scale),
+            round(settings.METEOR_HEIGHT * scale),
+        )
+        self.frames = [
+            pg.transform.scale(frame, meteor_size)
+            for frame in base_frames
+        ]
+        self.current_frame = 0
+        self.image = self.frames[self.current_frame]
+        x = randint(0, settings.WIDTH - meteor_size[0])
+        y = -meteor_size[1]
+        self.rect = self.image.get_rect(topleft=(x, y))
+        base_speed = randint(settings.OBS_SPEED_MIN, settings.OBS_SPEED_MAX)
+        speed_bonus = (settings.METEOR_SCALE_MAX - scale) * 0.8
+        self.speed = max(1, round(base_speed + speed_bonus))
+        self.last_update_time = pg.time.get_ticks()
 
     def update(self):
         self.rect.y += self.speed
+        current_time = pg.time.get_ticks()
+        if current_time - self.last_update_time > settings.METEOR_ANIMATION_SPEED:
+            self.current_frame = (self.current_frame + 1) % len(self.frames)
+            self.image = self.frames[self.current_frame]
+            self.last_update_time = current_time
 
 def spawn_obstacle(list):
     list.append(Obstacle())

@@ -3,9 +3,16 @@ WIDTH = 1280
 HEIGHT = 720
 #Assets
 BACKGROUND = "assets/background.png"
-PLAYER_IDLE = "assets/idle.png"
-PLAYER_RIGHT = "assets/right.png"
-PLAYER_LEFT = "assets/left.png"
+PLAYER_IDLE = "assets/player/idle.png"
+PLAYER_RIGHT = "assets/player/right.png"
+PLAYER_LEFT = "assets/player/left.png"
+METEOR_FRAMES = [
+	"assets/meteor/FB001.png",
+	"assets/meteor/FB002.png",
+	"assets/meteor/FB003.png",
+	"assets/meteor/FB004.png",
+	"assets/meteor/FB005.png",
+]
 
 #Player
 FRAME_WIDTH = 64
@@ -19,10 +26,11 @@ STARTING_POS_H = HEIGHT - PLAYER_H
 PLAYER_SPEED = 5
 
 #Obstacles
-OBS_W_MIN = 20 
-OBS_W_MAX = 50
-OBS_H_MIN = 15
-OBS_H_MAX = 50
+METEOR_WIDTH = 32
+METEOR_HEIGHT = 64
+METEOR_SCALE_MIN = 0.6
+METEOR_SCALE_MAX = 1.6
+METEOR_ANIMATION_SPEED = 100
 OBS_SPEED_MIN = 4
 OBS_SPEED_MAX = 9
 NEW_OBS_MIN = 400

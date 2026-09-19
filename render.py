@@ -5,4 +5,4 @@ def draw_player(window, player):
     
 def draw_obstacles(window, list):
     for obstacle in list:
-        pg.draw.rect(window, obstacle.color, obstacle.rect)
+        window.blit(obstacle.image, obstacle.rect)
