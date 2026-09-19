@@ -4,6 +4,8 @@ HEIGHT = 720
 #Assets
 BACKGROUND = "assets/background.png"
 PLAYER_IDLE = "assets/idle.png"
+PLAYER_RIGHT = "assets/right.png"
+PLAYER_LEFT = "assets/left.png"
 
 #Player
 FRAME_WIDTH = 64
