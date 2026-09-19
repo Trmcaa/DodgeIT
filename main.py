@@ -7,6 +7,8 @@ import settings
 
 pg.init()
 
+PLAYER = player.PLAYER
+
 window = pg.display.set_mode((settings.WIDTH, settings.HEIGHT))
 pg.display.set_caption("DodgeIT")
 clock = pg.time.Clock()
@@ -18,11 +20,13 @@ while running:
             running = False
             exit()
             
-    window.fill("pink")
+    
+    
+    keys = pg.key.get_pressed()
+    PLAYER.handle_input(keys)
     
     pg.display.flip()
     
-    FPS = 60
-    clock.tick(FPS)
+    clock.tick(settings.FPS)
     
 pg.quit
