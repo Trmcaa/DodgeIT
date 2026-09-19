@@ -7,6 +7,7 @@ pg.init()
 import player
 import render
 import obstacles
+import effects
 import settings
 
 #Player
@@ -22,6 +23,7 @@ background = pg.image.load(settings.BACKGROUND)
 background = pg.transform.scale(background, (settings.WIDTH, settings.HEIGHT))
 
 obstacles_list = []
+active_effects = []
 last_spawn_time = pg.time.get_ticks()
 
 #Loop
@@ -44,11 +46,26 @@ while running:
         last_spawn_time = current_time
     
     #Render
-    obstacles.update_obstacles(obstacles_list)
+    landed_obstacles = obstacles.update_obstacles(obstacles_list)
+
+    for obstacle in landed_obstacles:
+        active_effects.append(
+            effects.create_ground_effect((obstacle.rect.centerx, settings.HEIGHT))
+        )
+
+    for obstacle in obstacles_list[:]:
+        if obstacle.rect.colliderect(PLAYER.rect):
+            active_effects.append(effects.create_hit_effect(obstacle.rect.center))
+            obstacles_list.remove(obstacle)
+
+    for effect in active_effects:
+        effect.update()
+    active_effects[:] = [effect for effect in active_effects if not effect.finished]
     
     window.blit(background, (0,0))
     render.draw_player(window, PLAYER)
     render.draw_obstacles(window, obstacles_list)
+    render.draw_effects(window, active_effects)
     
     #Update
     pg.display.flip()

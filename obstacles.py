@@ -1,6 +1,7 @@
 import pygame as pg
 from random import randint
 import settings
+import effects
 
 class Obstacle():
     def __init__(self):
@@ -22,6 +23,10 @@ class Obstacle():
         x = randint(0, settings.WIDTH - meteor_size[0])
         y = -meteor_size[1]
         self.rect = self.image.get_rect(topleft=(x, y))
+        self.flight_effect = effects.create_flight_effect(
+            self.rect.center,
+            (self.rect.width * 2, self.rect.height * 2),
+        )
         base_speed = randint(settings.OBS_SPEED_MIN, settings.OBS_SPEED_MAX)
         speed_bonus = (settings.METEOR_SCALE_MAX - scale) * 0.8
         self.speed = max(1, round(base_speed + speed_bonus))
@@ -29,6 +34,7 @@ class Obstacle():
 
     def update(self):
         self.rect.y += self.speed
+        self.flight_effect.update(self.rect.center)
         current_time = pg.time.get_ticks()
         if current_time - self.last_update_time > settings.METEOR_ANIMATION_SPEED:
             self.current_frame = (self.current_frame + 1) % len(self.frames)
@@ -40,10 +46,14 @@ def spawn_obstacle(list):
 
 def update_obstacles(list):
     still_visible = []
+    landed = []
     
     for obstacle in list:
         obstacle.update()
         if obstacle.rect.top < settings.HEIGHT:
             still_visible.append(obstacle)
+        else:
+            landed.append(obstacle)
             
     list[:] = still_visible
+    return landed
