@@ -19,11 +19,12 @@ while running:
         if event.type == pg.QUIT:
             running = False
             exit()
-            
-    
     
     keys = pg.key.get_pressed()
     PLAYER.handle_input(keys)
+    
+    window.fill(settings.BACKGROUND)
+    render.draw_player(window, PLAYER)
     
     pg.display.flip()
     
