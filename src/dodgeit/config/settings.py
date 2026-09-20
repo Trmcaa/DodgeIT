@@ -1,17 +1,28 @@
+#Exe fix
+import sys
+import os
+
+def resource_path(relative_path):
+    if hasattr(sys, "_MEIPASS"):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 # Display
 WIDTH = 1280
 HEIGHT = 720
 # Assets
-BACKGROUND = "assets/background.png"
-PLAYER_IDLE = "assets/player/idle.png"
-PLAYER_RIGHT = "assets/player/right.png"
-PLAYER_LEFT = "assets/player/left.png"
+BACKGROUND = resource_path("assets/background.png")
+PLAYER_IDLE = resource_path("assets/player/idle.png")
+PLAYER_RIGHT = resource_path("assets/player/right.png")
+PLAYER_LEFT = resource_path("assets/player/left.png")
 METEOR_FRAMES = [
-	"assets/meteor/FB001.png",
-	"assets/meteor/FB002.png",
-	"assets/meteor/FB003.png",
-	"assets/meteor/FB004.png",
-	"assets/meteor/FB005.png",
+	resource_path("assets/meteor/FB001.png"),
+	resource_path("assets/meteor/FB002.png"),
+	resource_path("assets/meteor/FB003.png"),
+	resource_path("assets/meteor/FB004.png"),
+	resource_path("assets/meteor/FB005.png"),
 ]
 
 # Player
