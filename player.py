@@ -49,6 +49,7 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_d]:
             self.rect.x += settings.PLAYER_SPEED
             self.set_animation("right")
+        self.rect.x = max(0, min(self.rect.x, settings.WIDTH - self.rect.width))
         if not keys[pg.K_a] and not keys[pg.K_d]:
             self.set_animation("idle")
 

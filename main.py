@@ -25,6 +25,9 @@ background = pg.transform.scale(background, (settings.WIDTH, settings.HEIGHT))
 obstacles_list = []
 active_effects = []
 last_spawn_time = pg.time.get_ticks()
+game_over = False
+chaos_mode = False
+game_over_time = 0
 
 #Loop
 while running:
@@ -36,13 +39,19 @@ while running:
     
     #input
     keys = pg.key.get_pressed()
-    PLAYER.handle_input(keys)
+    if not game_over:
+        PLAYER.handle_input(keys)
     PLAYER.animate()
     
     #Obstacles spawn
     current_time = pg.time.get_ticks()
-    if current_time - last_spawn_time > settings.NEW_OBS_MIN:
-        obstacles.spawn_obstacle(obstacles_list)
+    if game_over and not chaos_mode and current_time - game_over_time >= settings.GAME_OVER_DELAY:
+        chaos_mode = True
+        last_spawn_time = current_time
+
+    spawn_interval = settings.CHAOS_SPAWN_INTERVAL if chaos_mode else settings.NEW_OBS_MIN
+    if current_time - last_spawn_time > spawn_interval:
+        obstacles.spawn_obstacle(obstacles_list, chaos_mode)
         last_spawn_time = current_time
     
     #Render
@@ -54,9 +63,11 @@ while running:
         )
 
     for obstacle in obstacles_list[:]:
-        if obstacle.rect.colliderect(PLAYER.rect):
+        if not game_over and obstacle.rect.colliderect(PLAYER.rect):
             active_effects.append(effects.create_hit_effect(obstacle.rect.center))
             obstacles_list.remove(obstacle)
+            game_over = True
+            game_over_time = current_time
 
     for effect in active_effects:
         effect.update()
@@ -66,6 +77,8 @@ while running:
     render.draw_player(window, PLAYER)
     render.draw_obstacles(window, obstacles_list)
     render.draw_effects(window, active_effects)
+    if game_over:
+        render.draw_game_over(window, chaos_mode)
     
     #Update
     pg.display.flip()

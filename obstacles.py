@@ -4,7 +4,7 @@ import settings
 import effects
 
 class Obstacle():
-    def __init__(self):
+    def __init__(self, chaos=False):
         base_frames = [pg.image.load(path).convert_alpha() for path in settings.METEOR_FRAMES]
         scale = randint(
             int(settings.METEOR_SCALE_MIN * 100),
@@ -30,6 +30,8 @@ class Obstacle():
         base_speed = randint(settings.OBS_SPEED_MIN, settings.OBS_SPEED_MAX)
         speed_bonus = (settings.METEOR_SCALE_MAX - scale) * 0.8
         self.speed = max(1, round(base_speed + speed_bonus))
+        if chaos:
+            self.speed *= settings.CHAOS_SPEED_MULTIPLIER
         self.last_update_time = pg.time.get_ticks()
 
     def update(self):
@@ -41,8 +43,8 @@ class Obstacle():
             self.image = self.frames[self.current_frame]
             self.last_update_time = current_time
 
-def spawn_obstacle(list):
-    list.append(Obstacle())
+def spawn_obstacle(list, chaos=False):
+    list.append(Obstacle(chaos))
 
 def update_obstacles(list):
     still_visible = []
