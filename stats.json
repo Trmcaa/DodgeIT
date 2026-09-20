@@ -1,13 +1,13 @@
 {
-    "total_runs": 3,
-    "best_score": 28,
-    "total_score": 33,
-    "total_hits_taken": 3,
+    "total_runs": 0,
+    "best_score": 0,
+    "total_score": 0,
+    "total_hits_taken": 0,
     "speed_upgrades": 0,
     "survivability_upgrades": 0,
     "difficulty_runs": {
-        "easy": 2,
+        "easy": 0,
         "medium": 0,
-        "hard": 1
+        "hard": 0
     }
 }
