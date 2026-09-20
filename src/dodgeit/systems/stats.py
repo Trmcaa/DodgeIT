@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 
-STATS_PATH = Path(__file__).with_name("stats.json")
+STATS_PATH = Path(__file__).parents[3] / "stats.json"
 DEFAULT_STATS = {
     "total_runs": 0,
     "best_score": 0,

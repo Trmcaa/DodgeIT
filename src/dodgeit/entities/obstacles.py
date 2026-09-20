@@ -2,8 +2,9 @@
 
 import pygame as pg
 from random import randint
-import settings
-import effects
+
+from ..config import settings
+from ..systems import effects
 
 
 _base_meteor_frames = None

@@ -2,7 +2,7 @@
 
 import pygame as pg
 
-import settings
+from ..config import settings
 
 
 def purchase_speed(player, score):

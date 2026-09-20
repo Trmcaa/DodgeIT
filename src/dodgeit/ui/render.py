@@ -1,7 +1,8 @@
 """All drawing functions used by the game session."""
 
 import pygame as pg
-import settings
+
+from ..config import settings
 
 _score_font = pg.font.Font(None, 42)
 _hint_font = pg.font.Font(None, 32)
@@ -39,7 +40,7 @@ def draw_hud(window, score, best_score, player, difficulty):
         (255, 190, 150),
     )
     mode_text = _option_font.render(
-        f"{settings.DIFFICULTIES[difficulty]['label']} MODE",
+        f"{settings.DIFFICULTIES[difficulty]['label']} MODE  x{settings.DIFFICULTIES[difficulty]['score_rate']}",
         True,
         (255, 210, 140),
     )
@@ -82,9 +83,9 @@ def draw_game_over(window, respawn_ready):
 
     title = _game_over_title_font.render("GAME OVER", True, (255, 80, 70))
     if respawn_ready:
-        subtitle_text = "PRESS ENTER TO RESPAWN"
+        subtitle_text = "PRESS ENTER TO RESPAWN  |  M FOR MENU"
     else:
-        subtitle_text = "PRESS ENTER AFTER THE COUNTDOWN"
+        subtitle_text = "PRESS ENTER AFTER THE COUNTDOWN  |  M FOR MENU"
     subtitle = _game_over_subtitle_font.render(subtitle_text, True, (255, 220, 150))
     window.blit(title, title.get_rect(center=(window.get_width() // 2, window.get_height() // 2 - 35)))
     window.blit(subtitle, subtitle.get_rect(center=(window.get_width() // 2, window.get_height() // 2 + 45)))
@@ -96,7 +97,7 @@ def draw_paused(window):
     overlay.fill((0, 0, 0, 125))
     window.blit(overlay, (0, 0))
     title = _game_over_title_font.render("PAUSED", True, (255, 240, 190))
-    subtitle = _game_over_subtitle_font.render("PRESS P TO CONTINUE", True, (230, 240, 255))
+    subtitle = _game_over_subtitle_font.render("PRESS P TO CONTINUE  |  M FOR MENU", True, (230, 240, 255))
     window.blit(title, title.get_rect(center=(window.get_width() // 2, window.get_height() // 2 - 35)))
     window.blit(subtitle, subtitle.get_rect(center=(window.get_width() // 2, window.get_height() // 2 + 45)))
 
@@ -112,7 +113,7 @@ def draw_main_menu(window, lifetime_stats):
     window.blit(title, title.get_rect(center=(window.get_width() // 2, 115)))
     window.blit(subtitle, subtitle.get_rect(center=(window.get_width() // 2, 180)))
 
-    options = [("1", "EASY"), ("2", "MEDIUM"), ("3", "HARD")]
+    options = [("1", "EASY  x0.75"), ("2", "MEDIUM  x1.0"), ("3", "HARD  x1.5")]
     for index, (key, label) in enumerate(options):
         y = 260 + index * 58
         option = _title_font.render(f"{key}   {label}", True, (255, 220, 130))
@@ -131,5 +132,5 @@ def draw_main_menu(window, lifetime_stats):
     for index, line in enumerate(lifetime_lines):
         window.blit(_option_font.render(line, True, (220, 230, 240)), (stats_x, stats_y + 38 + index * 28))
 
-    footer = _option_font.render("A / D to move   |   U upgrades   |   P pause", True, (190, 210, 220))
+    footer = _option_font.render("A / D move   |   U upgrades   |   P pause   |   M menu", True, (190, 210, 220))
     window.blit(footer, footer.get_rect(center=(window.get_width() // 2, 600)))

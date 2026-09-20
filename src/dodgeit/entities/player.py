@@ -1,7 +1,8 @@
 """Player animation, movement, upgrades, and hit handling."""
 
 import pygame as pg
-import settings
+
+from ..config import settings
 
 
 class Player(pg.sprite.Sprite):

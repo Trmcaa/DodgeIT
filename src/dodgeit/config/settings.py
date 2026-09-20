@@ -37,6 +37,7 @@ RESPAWN_DELAY = 5000
 DIFFICULTIES = {
 	"easy": {
 		"label": "EASY",
+		"score_rate": 0.75,
 		"spawn_interval": 850,
 		"speed_min": 3,
 		"speed_max": 6,
@@ -45,6 +46,7 @@ DIFFICULTIES = {
 	},
 	"medium": {
 		"label": "MEDIUM",
+		"score_rate": 1.0,
 		"spawn_interval": 600,
 		"speed_min": 4,
 		"speed_max": 8,
@@ -53,6 +55,7 @@ DIFFICULTIES = {
 	},
 	"hard": {
 		"label": "HARD",
+		"score_rate": 1.5,
 		"spawn_interval": 380,
 		"speed_min": 6,
 		"speed_max": 11,

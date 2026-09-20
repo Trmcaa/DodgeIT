@@ -5,7 +5,7 @@ import pygame as pg
 
 def main():
     pg.init()
-    from game import Game
+    from src.dodgeit.game import Game
 
     Game().run()
     pg.quit()

@@ -2,13 +2,10 @@
 
 import pygame as pg
 
-import effects
-import obstacles
-import player
-import render
-import settings
-import stats
-import upgrades
+from .config import settings
+from .entities import obstacles, player
+from .systems import effects, stats, upgrades
+from .ui import render
 
 
 class Game:
@@ -61,6 +58,10 @@ class Game:
             if event.type != pg.KEYDOWN:
                 continue
 
+            if event.key == pg.K_m and (self.game_over or self.paused):
+                self.return_to_menu()
+                continue
+
             if self.show_menu:
                 difficulty_keys = {
                     pg.K_1: "easy",
@@ -106,6 +107,27 @@ class Game:
         self.score_start_time = pg.time.get_ticks()
         self.last_spawn_time = self.score_start_time
 
+    def return_to_menu(self):
+        """Leave a paused or finished run without losing lifetime progress."""
+        self.obstacles.clear()
+        self.active_effects.clear()
+        self.player.rect.topleft = (settings.STARTING_POS_W, settings.STARTING_POS_H)
+        self.player.set_animation("idle")
+        self.player.reset_hits()
+        self.difficulty = None
+        self.show_menu = True
+        self.game_over = False
+        self.paused = False
+        self.upgrade_menu = False
+        self.score = 0
+        self.score_adjustment = 0
+
+    def calculate_score(self, current_time):
+        """Calculate survival score using the selected difficulty multiplier."""
+        elapsed_seconds = (current_time - self.score_start_time) // 1000
+        score_rate = settings.DIFFICULTIES[self.difficulty]["score_rate"]
+        return int(elapsed_seconds * score_rate) + self.score_adjustment
+
     def record_current_run(self):
         """Persist the run once, when the player is defeated."""
         if self.run_recorded:
@@ -149,7 +171,7 @@ class Game:
         keys = pg.key.get_pressed()
         if not self.game_over:
             self.player.handle_input(keys)
-            self.score = (current_time - self.score_start_time) // 1000 + self.score_adjustment
+            self.score = self.calculate_score(current_time)
             self.best_score = max(self.best_score, self.score)
         self.player.animate()
 
@@ -179,7 +201,7 @@ class Game:
                 if self.player.hits_remaining <= 0:
                     self.game_over = True
                     self.game_over_time = current_time
-                    self.score = (current_time - self.score_start_time) // 1000 + self.score_adjustment
+                    self.score = self.calculate_score(current_time)
                     self.record_current_run()
 
     def update_effects(self):
