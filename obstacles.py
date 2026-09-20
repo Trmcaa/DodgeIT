@@ -5,11 +5,32 @@ from random import randint
 import settings
 import effects
 
+
+_base_meteor_frames = None
+_scaled_meteor_frames = {}
+
+
+def get_meteor_frames(meteor_size):
+    """Load and scale meteor frames once for each requested size."""
+    global _base_meteor_frames
+    if _base_meteor_frames is None:
+        _base_meteor_frames = [
+            pg.image.load(path).convert_alpha()
+            for path in settings.METEOR_FRAMES
+        ]
+
+    if meteor_size not in _scaled_meteor_frames:
+        _scaled_meteor_frames[meteor_size] = tuple(
+            pg.transform.scale(frame, meteor_size)
+            for frame in _base_meteor_frames
+        )
+    return _scaled_meteor_frames[meteor_size]
+
+
 class Obstacle():
     """One animated meteor with a random size and falling speed."""
 
     def __init__(self, chaos=False):
-        base_frames = [pg.image.load(path).convert_alpha() for path in settings.METEOR_FRAMES]
         scale = randint(
             int(settings.METEOR_SCALE_MIN * 100),
             int(settings.METEOR_SCALE_MAX * 100),
@@ -18,10 +39,7 @@ class Obstacle():
             round(settings.METEOR_WIDTH * scale),
             round(settings.METEOR_HEIGHT * scale),
         )
-        self.frames = [
-            pg.transform.scale(frame, meteor_size)
-            for frame in base_frames
-        ]
+        self.frames = get_meteor_frames(meteor_size)
         self.current_frame = 0
         self.image = self.frames[self.current_frame]
         x = randint(0, settings.WIDTH - meteor_size[0])

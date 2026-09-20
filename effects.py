@@ -4,14 +4,18 @@ import pygame as pg
 from random import choice, randint, uniform
 
 
-class Effect:
-    """Play a grid-based spritesheet effect once or in a loop."""
+_effect_frame_cache = {}
+_debris_image_cache = {}
 
-    def __init__(self, path, columns, rows, position, size, frame_time, loop=False):
+
+def load_effect_frames(path, columns, rows, size):
+    """Cache decoded and scaled frames for repeated effects."""
+    cache_key = (path, columns, rows, size)
+    if cache_key not in _effect_frame_cache:
         sheet = pg.image.load(path).convert_alpha()
         frame_width = sheet.get_width() // columns
         frame_height = sheet.get_height() // rows
-        self.frames = []
+        frames = []
         for row in range(rows):
             for column in range(columns):
                 frame = sheet.subsurface((
@@ -20,7 +24,16 @@ class Effect:
                     frame_width,
                     frame_height,
                 ))
-                self.frames.append(pg.transform.smoothscale(frame, size))
+                frames.append(pg.transform.smoothscale(frame, size))
+        _effect_frame_cache[cache_key] = tuple(frames)
+    return _effect_frame_cache[cache_key]
+
+
+class Effect:
+    """Play a grid-based spritesheet effect once or in a loop."""
+
+    def __init__(self, path, columns, rows, position, size, frame_time, loop=False):
+        self.frames = load_effect_frames(path, columns, rows, size)
 
         self.position = position
         self.image = self.frames[0]
@@ -66,9 +79,16 @@ class GroundDebris:
         ]
         self.particles = []
         for _ in range(14):
-            image = pg.image.load(choice(paths)).convert_alpha()
+            path = choice(paths)
             size = randint(12, 28)
-            image = pg.transform.smoothscale(image, (size, size))
+            cache_key = (path, size)
+            if cache_key not in _debris_image_cache:
+                source = pg.image.load(path).convert_alpha()
+                _debris_image_cache[cache_key] = pg.transform.smoothscale(
+                    source,
+                    (size, size),
+                )
+            image = _debris_image_cache[cache_key].copy()
             self.particles.append({
                 "image": image,
                 "position": [position[0] + uniform(-12, 12), position[1] - randint(2, 10)],
