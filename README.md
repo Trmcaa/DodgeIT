@@ -144,8 +144,8 @@ Dodge It caches decoded and scaled meteor frames, visual-effects spritesheets, d
 
 - Game code and integration: **Dodge It project**
 - Visual-effects sprites: **Brackeys VFX Bundle**
-- Player and meteor sprites: [Sprites]**(https://nyknck.itch.io)**
-- Background artwork: [Sprites]**(https://nyknck.itch.io)**
+- Player and meteor sprites: [Sprites](https://nyknck.itch.io)
+- Background artwork: [Sprites](https://nyknck.itch.io)
 
 When redistributing the project, preserve the original asset licenses and credits bundled with the source assets.
 
