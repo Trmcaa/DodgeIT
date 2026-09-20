@@ -30,6 +30,8 @@ chaos_mode = False
 game_over_time = 0
 score_start_time = pg.time.get_ticks()
 score = 0
+score_adjustment = 0
+upgrade_menu = False
 
 #Loop
 while running:
@@ -38,6 +40,17 @@ while running:
         if event.type == pg.QUIT:
             running = False
             exit()
+        if event.type == pg.KEYDOWN and event.key == pg.K_u and not game_over:
+            upgrade_menu = not upgrade_menu
+        if event.type == pg.KEYDOWN and not game_over and upgrade_menu and score >= settings.UPGRADE_COST:
+            if event.key in (pg.K_LSHIFT, pg.K_RSHIFT) and not PLAYER.speed_upgraded:
+                PLAYER.upgrade_speed()
+                score -= settings.UPGRADE_COST
+                score_adjustment -= settings.UPGRADE_COST
+            elif event.key == pg.K_2 and PLAYER.max_hits < 2:
+                PLAYER.upgrade_survivability()
+                score -= settings.UPGRADE_COST
+                score_adjustment -= settings.UPGRADE_COST
         if (
             event.type == pg.KEYDOWN
             and event.key == pg.K_RETURN
@@ -51,8 +64,11 @@ while running:
             PLAYER.last_update_time = pg.time.get_ticks()
             game_over = False
             chaos_mode = False
+            upgrade_menu = False
+            PLAYER.reset_hits()
             score_start_time = pg.time.get_ticks()
             score = 0
+            score_adjustment = 0
             last_spawn_time = score_start_time
     
     current_time = pg.time.get_ticks()
@@ -61,7 +77,7 @@ while running:
     keys = pg.key.get_pressed()
     if not game_over:
         PLAYER.handle_input(keys)
-        score = (current_time - score_start_time) // 1000
+        score = (current_time - score_start_time) // 1000 + score_adjustment
     PLAYER.animate()
     
     #Obstacles spawn
@@ -86,9 +102,11 @@ while running:
         if not game_over and obstacle.rect.colliderect(PLAYER.rect):
             active_effects.append(effects.create_hit_effect(obstacle.rect.center))
             obstacles_list.remove(obstacle)
-            game_over = True
-            game_over_time = current_time
-            score = (current_time - score_start_time) // 1000
+            PLAYER.hits_remaining -= 1
+            if PLAYER.hits_remaining <= 0:
+                game_over = True
+                game_over_time = current_time
+                score = (current_time - score_start_time) // 1000 + score_adjustment
 
     for effect in active_effects:
         effect.update()
@@ -99,6 +117,7 @@ while running:
     render.draw_obstacles(window, obstacles_list)
     render.draw_effects(window, active_effects)
     render.draw_score(window, score)
+    render.draw_upgrade_menu(window, upgrade_menu, score, PLAYER)
     if game_over:
         respawn_ready = current_time - game_over_time >= settings.RESPAWN_DELAY
         render.draw_game_over(window, chaos_mode, respawn_ready)

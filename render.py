@@ -1,4 +1,5 @@
 import pygame as pg
+import settings
 
 def draw_player(window, player):
     window.blit(player.image, player.rect)
@@ -17,6 +18,29 @@ def draw_score(window, score):
     score_text = font.render(f"SCORE: {score}", True, (255, 240, 190))
     window.blit(score_text, (20, 18))
 
+def draw_upgrade_menu(window, is_open, score, player):
+    hint_font = pg.font.Font(None, 32)
+    hint = hint_font.render('PRESS "U" FOR UPGRADES', True, (255, 240, 190))
+    hint_rect = hint.get_rect(topright=(window.get_width() - 20, 18))
+    window.blit(hint, hint_rect)
+
+    if not is_open:
+        return
+
+    panel = pg.Surface((390, 150), pg.SRCALPHA)
+    panel.fill((10, 12, 30, 225))
+    panel_rect = panel.get_rect(topright=(window.get_width() - 20, 58))
+    window.blit(panel, panel_rect)
+
+    title_font = pg.font.Font(None, 32)
+    option_font = pg.font.Font(None, 27)
+    window.blit(title_font.render("UPGRADES - 100 SCORE", True, (255, 220, 120)), (panel_rect.x + 16, panel_rect.y + 12))
+    speed_state = "OWNED" if player.speed_upgraded else "BUY"
+    hits_state = "OWNED" if player.max_hits >= 2 else "BUY"
+    window.blit(option_font.render(f"SHIFT  Speed +{settings.SPEED_UPGRADE}: {speed_state}", True, (230, 240, 255)), (panel_rect.x + 16, panel_rect.y + 52))
+    window.blit(option_font.render(f"2      Survive 2 hits: {hits_state}", True, (230, 240, 255)), (panel_rect.x + 16, panel_rect.y + 82))
+    window.blit(option_font.render(f"Available score: {score}", True, (180, 210, 180)), (panel_rect.x + 16, panel_rect.y + 112))
+
 def draw_game_over(window, chaos_mode, respawn_ready):
     overlay = pg.Surface(window.get_size(), pg.SRCALPHA)
     overlay.fill((0, 0, 0, 145))
@@ -28,7 +52,7 @@ def draw_game_over(window, chaos_mode, respawn_ready):
     if respawn_ready:
         subtitle_text = "PRESS ENTER TO RESPAWN"
     elif chaos_mode:
-        subtitle_text = "CHAOS MODE - RESPAWN ZA CHVILI"
+        subtitle_text = "CHAOS MODE - PLANETA UMRELA"
     else:
         subtitle_text = "METEORY SE VRACI ZA 3 SEKUNDY"
     subtitle = subtitle_font.render(subtitle_text, True, (255, 220, 150))

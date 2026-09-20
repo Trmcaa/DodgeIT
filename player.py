@@ -18,6 +18,10 @@ class Player(pg.sprite.Sprite):
         self.rect: pg.Rect = self.image.get_rect()
         self.rect.x = settings.STARTING_POS_W
         self.rect.y = settings.STARTING_POS_H
+        self.speed = settings.PLAYER_SPEED
+        self.speed_upgraded = False
+        self.max_hits = 1
+        self.hits_remaining = self.max_hits
         
         self.last_update_time = pg.time.get_ticks()
 
@@ -44,14 +48,27 @@ class Player(pg.sprite.Sprite):
 
     def handle_input(self, keys):
         if keys[pg.K_a]:
-            self.rect.x -= settings.PLAYER_SPEED
+            self.rect.x -= self.speed
             self.set_animation("left")
         if keys[pg.K_d]:
-            self.rect.x += settings.PLAYER_SPEED
+            self.rect.x += self.speed
             self.set_animation("right")
         self.rect.x = max(0, min(self.rect.x, settings.WIDTH - self.rect.width))
         if not keys[pg.K_a] and not keys[pg.K_d]:
             self.set_animation("idle")
+
+    def upgrade_speed(self):
+        if not self.speed_upgraded:
+            self.speed += settings.SPEED_UPGRADE
+            self.speed_upgraded = True
+
+    def upgrade_survivability(self):
+        if self.max_hits < 2:
+            self.max_hits = 2
+            self.hits_remaining = self.max_hits
+
+    def reset_hits(self):
+        self.hits_remaining = self.max_hits
 
     def animate(self):
         current_time = pg.time.get_ticks()
