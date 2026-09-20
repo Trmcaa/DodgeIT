@@ -2,7 +2,7 @@
 
 # DODGE IT
 
-### Survive the fall. Learn the pattern. Then survive the chaos.
+### Survive the fall. Learn the pattern. Choose how far you can go.
 
 <img src="assets/background.png" alt="DodgeIT neon night landscape" width="720" />
 
@@ -30,21 +30,25 @@ Every second matters. Every upgrade is a choice. Every impact changes the run.
 - Flying meteors carry a looping fire trail.
 - Missed meteors burst into flying debris when they hit the ground.
 - A direct hit triggers an impact explosion.
-- After death, the arena escalates into **Chaos Mode**.
+- Choose between **Easy**, **Medium**, and **Hard** before each run.
 - Survive longer to earn more score and buy permanent upgrades.
 
 ## Controls
 
 | Action | Key |
 | --- | --- |
+| Choose Easy / Medium / Hard | `1` / `2` / `3` |
 | Move left | `A` |
 | Move right | `D` |
 | Open or close upgrades | `U` |
+| Pause or resume | `P` |
 | Buy speed upgrade | `SHIFT` |
 | Buy survivability upgrade | `CTRL` |
 | Respawn after the countdown | `ENTER` |
 
 The upgrade panel appears in the top-right corner. Each upgrade costs **100 score** and can be purchased once per run profile.
+
+The main menu also shows lifetime statistics loaded from `stats.json`, including total runs, best score, total score, hits taken, and upgrade purchases.
 
 ## Upgrade System
 
@@ -55,25 +59,33 @@ The upgrade panel appears in the top-right corner. Each upgrade costs **100 scor
 
 Purchased upgrades remain active after respawning, while the score and current round reset.
 
+## Difficulty
+
+Choose a difficulty from the main menu before starting a run. Each profile changes meteor size, fall speed, and spawn frequency.
+
+| Difficulty | Play style |
+| --- | --- |
+| **Easy** | More time between meteors and forgiving speeds. |
+| **Medium** | The intended default challenge. |
+| **Hard** | Fast meteors, tighter timing, and little room for mistakes. |
+
 ## Game Flow
 
 ```text
-Normal Run
+Difficulty Menu
+    |
+    |  choose Easy / Medium / Hard
+    v
+Active Run
     |
     |  meteor collision
     v
 Game Over
     |
-    |  3 seconds
-    v
-Chaos Mode
-    |
-    |  5 seconds total + ENTER
+    |  countdown + ENTER
     v
 Respawn and try again
 ```
-
-Chaos Mode is intentionally uncontrolled: meteors fall faster and spawn at a much higher rate. It is a pressure phase, not a pause screen.
 
 ## Project Structure
 
@@ -87,6 +99,8 @@ DodgeIT/
 ├── render.py      # All drawing and HUD functions
 ├── settings.py    # Display, asset, gameplay, and timing configuration
 ├── upgrades.py    # Upgrade purchase rules and keyboard mapping
+├── stats.py       # Lifetime statistics loading and persistence
+├── stats.json     # Local lifetime statistics data
 └── assets/
     ├── meteor/    # Meteor animation frames
     ├── player/    # Idle, left, and right player spritesheets
@@ -124,7 +138,7 @@ py main.py
 
 ## Performance Notes
 
-Dodge It caches decoded and scaled meteor frames, visual-effects spritesheets, debris textures, and HUD fonts. This keeps expensive image processing out of the frame loop and helps the game stay responsive as Chaos Mode fills the screen.
+Dodge It caches decoded and scaled meteor frames, visual-effects spritesheets, debris textures, and HUD fonts. This keeps expensive image processing out of the frame loop and helps the game stay responsive during difficult runs.
 
 ## Credits
 

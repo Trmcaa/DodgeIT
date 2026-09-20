@@ -30,10 +30,11 @@ def get_meteor_frames(meteor_size):
 class Obstacle():
     """One animated meteor with a random size and falling speed."""
 
-    def __init__(self, chaos=False):
+    def __init__(self, difficulty):
+        difficulty_settings = settings.DIFFICULTIES[difficulty]
         scale = randint(
-            int(settings.METEOR_SCALE_MIN * 100),
-            int(settings.METEOR_SCALE_MAX * 100),
+            int(difficulty_settings["scale_min"] * 100),
+            int(difficulty_settings["scale_max"] * 100),
         ) / 100
         meteor_size = (
             round(settings.METEOR_WIDTH * scale),
@@ -49,11 +50,12 @@ class Obstacle():
             self.rect.center,
             (self.rect.width * 2, self.rect.height * 2),
         )
-        base_speed = randint(settings.OBS_SPEED_MIN, settings.OBS_SPEED_MAX)
-        speed_bonus = (settings.METEOR_SCALE_MAX - scale) * 0.8
+        base_speed = randint(
+            difficulty_settings["speed_min"],
+            difficulty_settings["speed_max"],
+        )
+        speed_bonus = (difficulty_settings["scale_max"] - scale) * 0.8
         self.speed = max(1, round(base_speed + speed_bonus))
-        if chaos:
-            self.speed *= settings.CHAOS_SPEED_MULTIPLIER
         self.last_update_time = pg.time.get_ticks()
 
     def update(self):
@@ -66,9 +68,9 @@ class Obstacle():
             self.image = self.frames[self.current_frame]
             self.last_update_time = current_time
 
-def spawn_obstacle(list, chaos=False):
+def spawn_obstacle(list, difficulty):
     """Add one meteor to the active meteor list."""
-    list.append(Obstacle(chaos))
+    list.append(Obstacle(difficulty))
 
 
 def update_obstacles(list):

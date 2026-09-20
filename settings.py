@@ -33,14 +33,33 @@ METEOR_HEIGHT = 64
 METEOR_SCALE_MIN = 0.6
 METEOR_SCALE_MAX = 1.6
 METEOR_ANIMATION_SPEED = 100
-OBS_SPEED_MIN = 4
-OBS_SPEED_MAX = 9
-CHAOS_SPEED_MULTIPLIER = 2
-NEW_OBS_MIN = 400
-NEW_OBS_MAX = 800
-GAME_OVER_DELAY = 3000
 RESPAWN_DELAY = 5000
-CHAOS_SPAWN_INTERVAL = 100
+DIFFICULTIES = {
+	"easy": {
+		"label": "EASY",
+		"spawn_interval": 850,
+		"speed_min": 3,
+		"speed_max": 6,
+		"scale_min": 0.8,
+		"scale_max": 1.3,
+	},
+	"medium": {
+		"label": "MEDIUM",
+		"spawn_interval": 600,
+		"speed_min": 4,
+		"speed_max": 8,
+		"scale_min": 0.7,
+		"scale_max": 1.5,
+	},
+	"hard": {
+		"label": "HARD",
+		"spawn_interval": 380,
+		"speed_min": 6,
+		"speed_max": 11,
+		"scale_min": 0.6,
+		"scale_max": 1.6,
+	},
+}
 
 # Timing
 FPS = 60
