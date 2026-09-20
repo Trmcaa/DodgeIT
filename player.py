@@ -1,7 +1,12 @@
+"""Player animation, movement, upgrades, and hit handling."""
+
 import pygame as pg
 import settings
 
+
 class Player(pg.sprite.Sprite):
+    """The player character and its persistent upgrade state."""
+
     def __init__(self):
         super().__init__()
 
@@ -27,6 +32,7 @@ class Player(pg.sprite.Sprite):
 
     @staticmethod
     def load_frames(path):
+        """Split one horizontal spritesheet into animation frames."""
         sprite_sheet = pg.image.load(path)
         frames = []
         for i in range(settings.FRAME_COUNT):
@@ -47,6 +53,7 @@ class Player(pg.sprite.Sprite):
             self.image = self.frames[self.current_frame]
 
     def handle_input(self, keys):
+        """Move horizontally and keep the player inside the display."""
         if keys[pg.K_a]:
             self.rect.x -= self.speed
             self.set_animation("left")
@@ -58,16 +65,19 @@ class Player(pg.sprite.Sprite):
             self.set_animation("idle")
 
     def upgrade_speed(self):
+        """Apply the one-time movement speed upgrade."""
         if not self.speed_upgraded:
             self.speed += settings.SPEED_UPGRADE
             self.speed_upgraded = True
 
     def upgrade_survivability(self):
+        """Unlock one additional meteor hit per round."""
         if self.max_hits < 2:
             self.max_hits = 2
             self.hits_remaining = self.max_hits
 
     def reset_hits(self):
+        """Restore the hit counter when a new round starts."""
         self.hits_remaining = self.max_hits
 
     def animate(self):

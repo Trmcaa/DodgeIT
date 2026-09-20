@@ -1,8 +1,12 @@
+"""Reusable spritesheet effects and the short ground-debris burst."""
+
 import pygame as pg
 from random import choice, randint, uniform
 
 
 class Effect:
+    """Play a grid-based spritesheet effect once or in a loop."""
+
     def __init__(self, path, columns, rows, position, size, frame_time, loop=False):
         sheet = pg.image.load(path).convert_alpha()
         frame_width = sheet.get_width() // columns
@@ -52,6 +56,8 @@ class Effect:
 
 
 class GroundDebris:
+    """Throw small transparent dirt particles upward from an impact point."""
+
     def __init__(self, position):
         paths = [
             "assets/vfx/dirt_01_a.png",

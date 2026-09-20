@@ -1,7 +1,7 @@
-#Window
+# Display
 WIDTH = 1280
 HEIGHT = 720
-#Assets
+# Assets
 BACKGROUND = "assets/background.png"
 PLAYER_IDLE = "assets/player/idle.png"
 PLAYER_RIGHT = "assets/player/right.png"
@@ -14,7 +14,7 @@ METEOR_FRAMES = [
 	"assets/meteor/FB005.png",
 ]
 
-#Player
+# Player
 FRAME_WIDTH = 64
 FRAME_HEIGHT = 128
 FRAME_COUNT = 8
@@ -27,7 +27,7 @@ PLAYER_SPEED = 5
 UPGRADE_COST = 100
 SPEED_UPGRADE = 3
 
-#Obstacles
+# Meteors
 METEOR_WIDTH = 32
 METEOR_HEIGHT = 64
 METEOR_SCALE_MIN = 0.6
@@ -42,5 +42,5 @@ GAME_OVER_DELAY = 3000
 RESPAWN_DELAY = 5000
 CHAOS_SPAWN_INTERVAL = 100
 
-#Clock
+# Timing
 FPS = 60

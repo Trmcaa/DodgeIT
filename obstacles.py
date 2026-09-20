@@ -1,9 +1,13 @@
+"""Meteor creation, animation, movement, and cleanup."""
+
 import pygame as pg
 from random import randint
 import settings
 import effects
 
 class Obstacle():
+    """One animated meteor with a random size and falling speed."""
+
     def __init__(self, chaos=False):
         base_frames = [pg.image.load(path).convert_alpha() for path in settings.METEOR_FRAMES]
         scale = randint(
@@ -35,6 +39,7 @@ class Obstacle():
         self.last_update_time = pg.time.get_ticks()
 
     def update(self):
+        """Move and advance the meteor animation."""
         self.rect.y += self.speed
         self.flight_effect.update(self.rect.center)
         current_time = pg.time.get_ticks()
@@ -44,9 +49,12 @@ class Obstacle():
             self.last_update_time = current_time
 
 def spawn_obstacle(list, chaos=False):
+    """Add one meteor to the active meteor list."""
     list.append(Obstacle(chaos))
 
+
 def update_obstacles(list):
+    """Update meteors and return those that reached the ground."""
     still_visible = []
     landed = []
     
